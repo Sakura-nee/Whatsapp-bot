@@ -1,0 +1,59 @@
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
+const fs = require('fs');
+const { load_cog, unload_cog } = require('./lib/load_cog');
+yuuki = {}
+
+const client = new Client({ 
+    puppeteer: {
+        headless: false
+    },
+    authStrategy: new LocalAuth()
+});
+
+client.on('qr', (qr) => {
+    // Generate and scan this code with your phone
+    console.log('QR RECEIVED', qr);
+});
+
+client.on('ready', () => {
+    console.log('Client is ready!');
+});
+
+client.on('message', async msg => {
+    const cmd = msg.body.split(' ')[0].split('!')[1]
+    const module_name = msg.body.split(' ')[1]
+    if(cmd == 'load_cog' || cmd == 'load') {
+        const load_status = await load_cog(module_name, yuuki);
+        if(load_status) {
+            msg.reply(load_status);
+        } else {
+            msg.reply(`unknown error`);
+        }
+    }
+
+    if(cmd == 'unload_cog' || cmd == 'unload') {
+        const unload_status = await unload_cog(module_name, yuuki);
+        if(unload_status) {
+            msg.reply(unload_status);
+        } else {
+            msg.reply(`unknown error`);
+        }
+    }
+
+    if(cmd == 'list') {
+        if(module_name == 'active_module' || module_name == 'actived_module') {
+            const Obj_arr = Object.keys(yuuki);
+            let text_to_send = "there all actived module:\n\n"
+            for(let actived_module of Obj_arr) {
+                text_to_send += `\t- ${actived_module}\n`
+            }
+            msg.reply(text_to_send);
+        }
+    }
+
+    if(yuuki.hasOwnProperty(cmd)) {
+        yuuki[cmd].main(msg);
+    }
+});
+
+client.initialize();
