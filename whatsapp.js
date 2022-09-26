@@ -1,18 +1,14 @@
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const fs = require('fs');
-const { load_cog, unload_cog } = require('./lib/load_cog');
+const { load_cog, unload_cog, reload_cog } = require('./lib/load_cog');
 yuuki = {}
 
 const client = new Client({ 
-    puppeteer: {
-        headless: false
-    },
     authStrategy: new LocalAuth()
 });
 
 client.on('qr', (qr) => {
-    // Generate and scan this code with your phone
-    console.log('QR RECEIVED', qr);
+    qrcode.generate(qr, {small: true});
 });
 
 client.on('ready', () => {
@@ -33,6 +29,15 @@ client.on('message', async msg => {
 
     if(cmd == 'unload_cog' || cmd == 'unload') {
         const unload_status = await unload_cog(module_name, yuuki);
+        if(unload_status) {
+            msg.reply(unload_status);
+        } else {
+            msg.reply(`unknown error`);
+        }
+    }
+
+    if(cmd == 'reload_cog' || cmd == 'reload') {
+        const unload_status = await reload_cog(module_name, yuuki);
         if(unload_status) {
             msg.reply(unload_status);
         } else {
