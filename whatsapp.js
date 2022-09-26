@@ -1,6 +1,8 @@
-const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
-const fs = require('fs');
+'use stric'
+const qrcode = require('qrcode-terminal');
+const { Client, LocalAuth } = require('whatsapp-web.js');
 const { load_cog, unload_cog, reload_cog } = require('./lib/load_cog');
+
 yuuki = {}
 
 const client = new Client({ 
