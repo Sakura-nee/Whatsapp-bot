@@ -1,7 +1,7 @@
-'use stric'
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { load_cog, unload_cog, reload_cog } = require('./lib/load_cog');
+const { start_schedule } = require('./lib/worker');
 
 yuuki = {}
 
@@ -14,6 +14,7 @@ client.on('qr', (qr) => {
 });
 
 client.on('ready', () => {
+    start_schedule(client);
     console.log('Client is ready!');
 });
 
@@ -59,7 +60,7 @@ client.on('message', async msg => {
     }
 
     if(yuuki.hasOwnProperty(cmd)) {
-        yuuki[cmd].main(msg);
+        yuuki[cmd].main(msg, client);
     }
 });
 
