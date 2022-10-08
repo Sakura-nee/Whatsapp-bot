@@ -14,7 +14,7 @@ async function sticker(msg) {
         } else {
             const receivedImage = await msg.downloadMedia();
             const stickerMedia = await new MessageMedia(receivedImage.mimetype, receivedImage.data);
-            msg.reply_sticker(stickerMedia);
+            msg.reply(stickerMedia, msg._getChatId(), {sendMediaAsSticker: true});
         }
     }
 }
