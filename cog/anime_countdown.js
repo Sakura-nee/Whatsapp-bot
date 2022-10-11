@@ -1,5 +1,5 @@
 'use stric'
-const { anime_info } = require('../lib/anilist/graphql');
+const { anime_search } = require('../lib/anilist/graphql');
 const { update_data } = require('../lib/worker');
 const trending_anime = require('../lib/countdown/trending_anime');
 
@@ -23,7 +23,7 @@ async function anime_countdown(msg) {
             const title = msg.body.toString().replace('!anime_countdown notify_on', '').trim();
             if(title !== '' || title === '!anime_countdown notify_on') {
                 const number = await msg.from;
-                const animeinfo = await anime_info(title);
+                const animeinfo = await anime_search(title);
                 if(animeinfo) {
                     const animeid = animeinfo.id.toString();
                     const anime_title = animeinfo.title.romaji;
@@ -36,7 +36,7 @@ async function anime_countdown(msg) {
             const title = msg.body.toString().replace('!anime_countdown notify_off', '').trim();
             if(title !== '' || title === '!anime_countdown notify_off') {
                 const number = await msg.from;
-                const animeinfo = await anime_info(title);
+                const animeinfo = await anime_search(title);
                 console.log(animeinfo);
                 if(animeinfo) {
                     const animeid = animeinfo.id.toString();
@@ -49,7 +49,7 @@ async function anime_countdown(msg) {
         }
         
         const command = msg.body.toString().replace('!anime_countdown', '').trim();
-        const resp = await anime_info(command);
+        const resp = await anime_search(command);
         console.log(resp)
 
         let now = new Date();
