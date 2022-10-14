@@ -1,6 +1,6 @@
 'use stric'
 const { anime_search } = require('../lib/anilist/graphql');
-const { update_data } = require('../lib/worker');
+const { update_data } = require('../lib/update_data');
 const trending_anime = require('../lib/countdown/trending_anime');
 
 const axios = require('axios');
@@ -10,7 +10,7 @@ const fs = require('fs');
 async function anime_countdown(msg) {
     try {
         if(msg.body.split(' ')[1] === undefined) {
-            msg.reply(`*anime cuntdown*`); // supported file hosting:\n- https://drop.download/
+            msg.reply(`*?*`);
             return;
         }
         if(msg.body.split(' ')[1] === 'trending') {
@@ -21,27 +21,48 @@ async function anime_countdown(msg) {
 
         if(msg.body.split(' ')[1] === 'notify_on') {
             const title = msg.body.toString().replace('!anime_countdown notify_on', '').trim();
+            
             if(title !== '' || title === '!anime_countdown notify_on') {
-                const number = await msg.from;
+    
+                const get_chat = await msg.getChat();
+                const is_group = get_chat.isGroup;
+                group_id = false;
+                if(is_group) {
+                    group_id = await msg.from;
+                    client_number = await msg.author;
+                } else {
+                    client_number = await msg.from;
+                }
+    
                 const animeinfo = await anime_search(title);
                 if(animeinfo) {
                     const animeid = animeinfo.id.toString();
                     const anime_title = animeinfo.title.romaji;
-                    const update_client = await update_data('add_client', animeid, anime_title, number)
+                    const update_client = await update_data('add_client', animeid, anime_title, client_number, group_id)
                     msg.reply(update_client);
                 }
             }
             return false;
+
         } else if(msg.body.split(' ')[1] === 'notify_off') {
             const title = msg.body.toString().replace('!anime_countdown notify_off', '').trim();
             if(title !== '' || title === '!anime_countdown notify_off') {
-                const number = await msg.from;
+    
+                const get_chat = await msg.getChat();
+                const is_group = get_chat.isGroup;
+                group_id = false;
+                if(is_group) {
+                    group_id = await msg.from;
+                    client_number = await msg.author;
+                } else {
+                    client_number = await msg.from;
+                }
+    
                 const animeinfo = await anime_search(title);
-                console.log(animeinfo);
                 if(animeinfo) {
                     const animeid = animeinfo.id.toString();
                     const anime_title = animeinfo.title.romaji;
-                    const update_client = await update_data('del_client', animeid, anime_title, number)
+                    const update_client = await update_data('del_client', animeid, anime_title, client_number, group_id)
                     msg.reply(update_client);
                 }
             }
@@ -50,7 +71,6 @@ async function anime_countdown(msg) {
         
         const command = msg.body.toString().replace('!anime_countdown', '').trim();
         const resp = await anime_search(command);
-        console.log(resp)
 
         let now = new Date();
         let timeSpan = (resp.nextAiringEpisode.airingAt * 1000) - now;
