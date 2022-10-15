@@ -1,3 +1,4 @@
+
 ## whatsapp bot
 
 ### Extensions
@@ -13,7 +14,6 @@ filename is used as command. example cog/ping.js, so how to use it is: !ping
 ### Tutorial creating extensions
 simple just define <b>function name</b> as <b>main</b>
 example:
-```
 ```javascript
 'use stric'
 message = 'Hello world'
