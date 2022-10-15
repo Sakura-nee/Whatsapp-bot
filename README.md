@@ -1,14 +1,30 @@
 ## whatsapp bot
 
-### !load
-you can load, reload, unload module ( cog ) with send message to bot
-make sure module saved inside folder <b>cog</b>!
-- !load module_name
-- !unload module_name
-- !reload module_name
+### Extensions
+you can load, reload, unload extension with send message to bot
+make sure file saved inside folder <b>cog</b>!
+- !load filename
+- !unload filename
+- !reload filename
 
-module name is used as command. example cog/ping.js, so how to use it is: !ping
+filename is used as command. example cog/ping.js, so how to use it is: !ping
 <br>
+
+### Tutorial creating extensions
+simple just define <b>function name</b> as <b>main</b>
+example:
+```
+```javascript
+'use stric'
+message = 'Hello world'
+
+async function hello_world(msg):
+	await msg.reply(message);
+
+module.exports = {
+	main:  hello_world,
+}
+```
 
 ### !anime_countdown
 - !anime_countdown title *( countdown new episode )*
