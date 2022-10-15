@@ -7,9 +7,6 @@ global.config = require('./config.json');
 yuuki = {}
 
 global.client = new Client({
-    puppeteer: {
-		headless: false,
-	},
     authStrategy: new LocalAuth()
 });
 
@@ -64,7 +61,7 @@ client.on('message', async msg => {
     }
 
     if(yuuki.hasOwnProperty(cmd)) {
-        yuuki[cmd].main(msg, client);
+        yuuki[cmd].main(msg);
     }
 });
 
